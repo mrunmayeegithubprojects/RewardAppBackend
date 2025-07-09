@@ -1,9 +1,20 @@
-FROM eclipse-temurin:17-jdk AS build
+# Use official OpenJDK 21 base image
+FROM eclipse-temurin:21-jdk
+
+# Set working directory
 WORKDIR /app
+
+# Copy project files
 COPY . .
+
+# Give permission to mvnw (in case it's not executable)
+RUN chmod +x mvnw
+
+# Build the application
 RUN ./mvnw clean package -DskipTests
 
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Run the app
+CMD ["java", "-jar", "target/rewardapp-0.0.1-SNAPSHOT.jar"]
