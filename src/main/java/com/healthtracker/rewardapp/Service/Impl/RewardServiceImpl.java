@@ -26,7 +26,8 @@ public class RewardServiceImpl implements RewardService {
     @Override
     public Double updateRewardData(RewardRequestDTO rewardRequestDTO) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
-        YearMonth ym = YearMonth.parse(rewardRequestDTO.getKey(), formatter);
+        String key = rewardRequestDTO.getKey().contains("RewardConsumed_")?rewardRequestDTO.getKey().split("_")[1]:rewardRequestDTO.getKey();
+        YearMonth ym = YearMonth.parse(key, formatter);
         RewardEntity rewardEntity = new RewardEntity();
         rewardEntity.setKeyMonDD(rewardRequestDTO.getKey());
         rewardEntity.setUserId(rewardRequestDTO.getUserId());
