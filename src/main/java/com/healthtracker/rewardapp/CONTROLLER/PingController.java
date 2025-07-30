@@ -15,4 +15,3 @@ import org.springframework.web.bind.annotation.RestController;
             return "pong - users in DB: " + userCount;
         }
     }
-}
