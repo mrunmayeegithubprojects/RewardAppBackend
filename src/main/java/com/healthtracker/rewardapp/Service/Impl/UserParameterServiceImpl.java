@@ -35,12 +35,12 @@ public class UserParameterServiceImpl implements UserParameterService {
 
     @Override
     public void setUserAndParameterDetails(UserParameterRequestDTO userParameterRequestDTO) {
-        Set<Long> parameterIDsCurrent = new HashSet<>();
+        Set<Long> parameterIDsCurrent = userParamRepository.findAll().stream().map(userParam -> userParam.getParameter().getParamId()).collect(Collectors.toSet()) ;
+
         //capturing a Map of parameter ID and its corresponding userParam ID
         Map<Long,Long> paramIdAndUserParamIdMap = new HashMap<>();
         for(UserParamEntity userParamEntity : getListOfActiveUserParameters(userParameterRequestDTO.getUserId())){
-            parameterIDsCurrent.add(userParamEntity.getParameterId());
-            paramIdAndUserParamIdMap.put(userParamEntity.getParameterId(), userParamEntity.getUserParamId());
+            paramIdAndUserParamIdMap.put(userParamEntity.getParameter().getParamId(), userParamEntity.getUserParamId());
         }
         Set<Long> parameterIdsMarkInactiveSet = new HashSet<>(parameterIDsCurrent);
         parameterIdsMarkInactiveSet.removeAll(userParameterRequestDTO.getParameterIds());
@@ -49,7 +49,7 @@ public class UserParameterServiceImpl implements UserParameterService {
 
         List<UserParamEntity> userParamEntityList_toBeMarkedInactive = UserParameterMapper.UserParameterRequestDTOToEntity(userParameterRequestDTO.getUserId(), parameterIdsMarkInactiveSet, "inactive");
         for(UserParamEntity userParamEntity: userParamEntityList_toBeMarkedInactive){
-            userParamEntity.setUserParamId(paramIdAndUserParamIdMap.get(userParamEntity.getParameterId()));
+            userParamEntity.setUserParamId(paramIdAndUserParamIdMap.get(userParamEntity.getParameter().getParamId()));
         }
         List<UserParamEntity> userParamEntityList_toBeMarkedActive = UserParameterMapper.UserParameterRequestDTOToEntity(userParameterRequestDTO.getUserId(), parameterIdsAddNew, "active");
         userParamRepository.saveAll(userParamEntityList_toBeMarkedInactive);
@@ -63,7 +63,7 @@ public class UserParameterServiceImpl implements UserParameterService {
         userParameterResponseDTO.setUserName(userRepository.findById(userId).map(UserEntity::getName).orElse(null));
         List<ParameterDTO> parameterDTOList = new ArrayList<>();
         for(UserParamEntity userParamEntity : activeUserParams){
-            parameterDTOList.add(modelMapper.map(parameterRepository.findById(userParamEntity.getParameterId()), ParameterDTO.class));
+            parameterDTOList.add(modelMapper.map(parameterRepository.findById(userParamEntity.getParameter().getParamId()), ParameterDTO.class));
         }
         userParameterResponseDTO.setParameterDTOList(parameterDTOList);
         return userParameterResponseDTO;

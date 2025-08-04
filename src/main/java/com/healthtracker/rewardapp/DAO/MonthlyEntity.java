@@ -7,9 +7,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "monthly")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 
 public class MonthlyEntity {
 
@@ -17,8 +14,9 @@ public class MonthlyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long monthlyId;
 
-    @Column(nullable = false)
-    private Long userParamId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userParamId", nullable = false)
+    private UserParamEntity userParam;
 
     @Column(nullable = false)
     private Integer rewardVal;
@@ -29,8 +27,8 @@ public class MonthlyEntity {
     @Column(nullable = false)
     private Boolean isMetFlag;
 
-    @Column(nullable = false)
-    private Long userId;
+    public MonthlyEntity() {
+    }
 
     public Long getMonthlyId() {
         return monthlyId;
@@ -40,13 +38,6 @@ public class MonthlyEntity {
         this.monthlyId = monthlyId;
     }
 
-    public Long getUserParamId() {
-        return userParamId;
-    }
-
-    public void setUserParamId(Long userParamId) {
-        this.userParamId = userParamId;
-    }
 
     public Integer getRewardVal() {
         return rewardVal;
@@ -72,11 +63,11 @@ public class MonthlyEntity {
         isMetFlag = metFlag;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserParamEntity getUserParam() {
+        return userParam;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserParam(UserParamEntity userParam) {
+        this.userParam = userParam;
     }
 }

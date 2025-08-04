@@ -15,8 +15,8 @@ public class UserParameterMapper {
         List<UserParamEntity> userParamEntityList = new ArrayList<>();
         for(Long parameterId : parameterIdList){
             UserParamEntity userParamEntity = new UserParamEntity();
-            userParamEntity.setUserId(userId);
-            userParamEntity.setParameterId(parameterId);
+            userParamEntity.setUser();setUserId(userId);
+            userParamEntity.setParameter(parameterId);
             userParamEntity.setStatus(status);
             userParamEntityList.add(userParamEntity);
         }

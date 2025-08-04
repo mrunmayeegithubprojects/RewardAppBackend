@@ -5,9 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "reward")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 public class RewardEntity {
 
     @Id
@@ -17,8 +15,9 @@ public class RewardEntity {
     @Column(nullable = false)
     private String keyMonDD; // e.g., MM-YYYY/RewardUse
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userParamId", nullable = false)
+    private UserParamEntity userParam;
 
     @Column(nullable = false)
     private Double rewardPoints;
@@ -39,12 +38,12 @@ public class RewardEntity {
         this.keyMonDD = keyMonDD;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserParamEntity getUserParam() {
+        return userParam;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserParam(UserParamEntity userParam) {
+        this.userParam = userParam;
     }
 
     public Double getRewardPoints() {

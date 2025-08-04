@@ -1,7 +1,11 @@
 package com.healthtracker.rewardapp.DAO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="parameters")
@@ -25,6 +29,21 @@ public class ParameterEntity {
 
     @Column(nullable = false)
     private String status;  // e.g. "active", "inactive"
+
+    @OneToMany(mappedBy = "parameter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<UserParamEntity> userParams = new ArrayList<>();
+
+    public ParameterEntity() {
+    }
+
+    public List<UserParamEntity> getUserParams() {
+        return userParams;
+    }
+
+    public void setUserParams(List<UserParamEntity> userParams) {
+        this.userParams = userParams;
+    }
 
     public Long getParamId() {
         return paramId;

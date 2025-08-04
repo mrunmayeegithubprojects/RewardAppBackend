@@ -1,5 +1,6 @@
 package com.healthtracker.rewardapp.Service.Impl;
 
+import com.healthtracker.rewardapp.Config.Constants;
 import com.healthtracker.rewardapp.DAO.UserEntity;
 import com.healthtracker.rewardapp.DTO.UserDTO;
 import com.healthtracker.rewardapp.REPO.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.healthtracker.rewardapp.Config.Constants.STATUS_ACTIVE;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         UserEntity userEntity = modelMapper.map(userDTO,UserEntity.class);
-        userEntity.setStatus("active");
+        userEntity.setStatus(STATUS_ACTIVE);
         return modelMapper.map(userRepository.save(userEntity), UserDTO.class);
     }
 

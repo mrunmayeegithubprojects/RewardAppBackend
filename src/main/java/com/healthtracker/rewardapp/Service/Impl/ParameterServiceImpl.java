@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.healthtracker.rewardapp.Config.Constants.STATUS_ACTIVE;
+
 @Service
 public class ParameterServiceImpl implements ParameterService {
 
@@ -23,7 +25,7 @@ public class ParameterServiceImpl implements ParameterService {
     @Override
     public ParameterDTO createParameter(ParameterDTO parameter) {
         ParameterEntity parameterEntity = modelMapper.map(parameter, ParameterEntity.class);
-        parameterEntity.setStatus("active");
+        parameterEntity.setStatus(STATUS_ACTIVE);
         return modelMapper.map(parameterRepository.save(parameterEntity), ParameterDTO.class);
     }
 
@@ -50,7 +52,7 @@ public class ParameterServiceImpl implements ParameterService {
         ParameterEntity parameterEntity = parameterRepository.findById(id).orElseThrow(() -> new RuntimeException("Parameter not found with id: "+id));
         modelMapper.map(parameter,parameterEntity);
         parameterEntity.setParamId(id);
-        parameterEntity.setStatus("active");
+        parameterEntity.setStatus(STATUS_ACTIVE);
         return modelMapper.map(parameterRepository.save(parameterEntity), ParameterDTO.class);
     }
 }

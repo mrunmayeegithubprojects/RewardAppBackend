@@ -1,15 +1,11 @@
 package com.healthtracker.rewardapp.DAO;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "daily")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 
 public class DailyEntity {
 
@@ -17,8 +13,9 @@ public class DailyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyId;
 
-    @Column(nullable = false)
-    private Long userParamId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userParamId", nullable = false)
+    private UserParamEntity userParam;
 
     @Column(nullable = false)
     private Integer rewardVal;
@@ -29,8 +26,8 @@ public class DailyEntity {
     @Column(nullable = false)
     private Boolean isMetFlag;
 
-    @Column(nullable = false)
-    private Long userId;
+    public DailyEntity() {
+    }
 
     public Long getDailyId() {
         return dailyId;
@@ -40,12 +37,12 @@ public class DailyEntity {
         this.dailyId = dailyId;
     }
 
-    public Long getUserParamId() {
-        return userParamId;
+    public UserParamEntity getUserParam() {
+        return userParam;
     }
 
-    public void setUserParamId(Long userParamId) {
-        this.userParamId = userParamId;
+    public void setUserParam(UserParamEntity userParam) {
+        this.userParam = userParam;
     }
 
     public Integer getRewardVal() {
@@ -70,13 +67,5 @@ public class DailyEntity {
 
     public void setMetFlag(Boolean metFlag) {
         isMetFlag = metFlag;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }
