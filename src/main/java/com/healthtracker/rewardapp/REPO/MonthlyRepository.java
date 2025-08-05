@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,11 @@ public interface MonthlyRepository extends JpaRepository<MonthlyEntity, Long> {
             @Param("month") int month,
             @Param("year") int year
     );
+
+    @Query("SELECT d.userId, SUM(d.rewardVal) " +
+            "FROM MonthlyEntity d " +
+            "WHERE d.date BETWEEN :startDate AND :endDate " +
+            "GROUP BY d.userId")
+    List<Object[]> getMonthlyRewardSums(@Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
 }

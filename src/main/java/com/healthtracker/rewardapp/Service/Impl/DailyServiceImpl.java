@@ -5,6 +5,7 @@ import com.healthtracker.rewardapp.DAO.ParameterEntity;
 import com.healthtracker.rewardapp.DAO.UserParamEntity;
 import com.healthtracker.rewardapp.DTO.DailyDTO;
 import com.healthtracker.rewardapp.REPO.DailyRepository;
+import com.healthtracker.rewardapp.REPO.MonthlyRepository;
 import com.healthtracker.rewardapp.REPO.ParameterRepository;
 import com.healthtracker.rewardapp.REPO.UserParamRepository;
 import com.healthtracker.rewardapp.Service.DailyService;
@@ -22,6 +23,9 @@ public class DailyServiceImpl implements DailyService {
     DailyRepository dailyRepository;
 
     @Autowired
+    MonthlyRepository monthlyRepository;
+
+    @Autowired
     UserParamRepository userParamRepository;
 
     @Autowired
@@ -32,9 +36,14 @@ public class DailyServiceImpl implements DailyService {
         for (DailyDTO dailyDTO1 : dailyDTO) {
             Long userParamId = userParamRepository.findUserParamIdByParameterIdAndUserId(dailyDTO1.getParamId(), dailyDTO1.getUserId());
             Optional<ParameterEntity> parameterEntity = parameterRepository.findById(dailyDTO1.getParamId());
-            int doneVal = parameterEntity.get().getDoneValue();
-            int notDoneVal = parameterEntity.get().getNotDoneValue();
-            int rewardVal = dailyDTO1.getMetFlag() ? doneVal : -(notDoneVal);
+            int rewardVal;
+            if(!dailyDTO1.getSkipFlag()) {
+                int doneVal = parameterEntity.get().getDoneValue();
+                int notDoneVal = parameterEntity.get().getNotDoneValue();
+                rewardVal = dailyDTO1.getMetFlag() ? doneVal : -(notDoneVal);
+            }else{
+                rewardVal = 0;
+            }
             DailyEntity dailyEntity1;
             Optional<DailyEntity> daily = dailyRepository.findByUserParamIdAndDate(userParamId, dailyDTO1.getDate());
             if (daily.isPresent()) {
@@ -74,4 +83,33 @@ public class DailyServiceImpl implements DailyService {
         }
         return dailyDTOList;
     }
+
+    @Override
+    public Map<Long, Double> getCurrentMonthStandings(LocalDate date) {
+        LocalDate firstDay = date.withDayOfMonth(1);
+        LocalDate lastDay = date.withDayOfMonth(date.lengthOfMonth());
+
+        // 2. Query DB
+        List<Object[]> dailyResults = dailyRepository.getMonthlyRewardSums(firstDay, lastDay);
+        List<Object[]> monthlyResults = monthlyRepository.getMonthlyRewardSums(firstDay, lastDay);
+
+        Map<Long, Double> totalRewards = new HashMap<>();
+
+// Daily rewards processing
+        for (Object[] row : dailyResults) {
+            Long userId = (Long) row[0];
+            Number reward = (Number) row[1];
+            totalRewards.put(userId, reward.doubleValue());
+        }
+
+// Monthly rewards processing (merge into same map)
+        for (Object[] row : monthlyResults) {
+            Long userId = (Long) row[0];
+            Number reward = (Number) row[1];
+            totalRewards.merge(userId, reward.doubleValue(), Double::sum);
+        }
+
+        return totalRewards;
+    }
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/daily")
@@ -23,5 +24,9 @@ public class DailyController {
     @GetMapping
     public List<DailyDTO> getUserParametersDailyDetails(@RequestParam Long userId, @RequestParam LocalDate date){
         return dailyService.getUserParameterDailyDetails(userId, date);
+    }
+    @GetMapping("/standings")
+    public Map<Long, Double> getCurremtMonthStandings(@RequestParam LocalDate date){
+        return dailyService.getCurrentMonthStandings(date);
     }
 }

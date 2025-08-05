@@ -17,5 +17,12 @@ public interface DailyRepository extends JpaRepository<DailyEntity, Long> {
     @Query("SELECT d FROM DailyEntity d WHERE d.userId = :userId AND MONTH(d.date) = :month AND YEAR(d.date) = :year")
     List<DailyEntity> findByUserIdAndMonthAndYear(@Param("userId") Long userParamId,@Param("month") int month,@Param("year") int year);
 
+    @Query("SELECT d.userId, SUM(d.rewardVal) " +
+            "FROM DailyEntity d " +
+            "WHERE d.date BETWEEN :startDate AND :endDate " +
+            "GROUP BY d.userId")
+    List<Object[]> getMonthlyRewardSums(@Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
+
 
 }

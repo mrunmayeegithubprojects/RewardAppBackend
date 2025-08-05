@@ -10,6 +10,7 @@ public class DailyDTO {
     private Long paramId;
    private Boolean metFlag;
     private LocalDate date;
+    private Boolean skipFlag;
 
     public Long getDailyId() {
         return dailyId;
@@ -49,5 +50,13 @@ public class DailyDTO {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Boolean getSkipFlag() {
+        return skipFlag;
+    }
+
+    public void setSkipFlag(Boolean skipFlag) {
+        this.skipFlag = skipFlag;
     }
 }
