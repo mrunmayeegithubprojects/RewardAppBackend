@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
         @GetMapping("/api/ping")
         public String ping() {
-            long userCount = userRepository.count();  // lightweight DB call
-            return "pong - users in DB: " + userCount;
+//            long userCount = userRepository.count();  // lightweight DB call
+//            return "pong - users in DB: " + userCount;
+            return "Test";
         }
     }
