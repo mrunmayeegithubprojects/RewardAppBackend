@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
         @Autowired
         private UserRepository userRepository;
 
-        @GetMapping("/api/ping")
-        public String ping() {
+//        @GetMapping("/api/ping")
+//        public String ping() {
 //            long userCount = userRepository.count();  // lightweight DB call
 //            return "pong - users in DB: " + userCount;
-            return "Test";
-        }
+//            return "Test";
+//        }
     }
